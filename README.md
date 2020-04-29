@@ -14,7 +14,7 @@ In this repository, dailyweather is django environment. All media files(images
 which is part of databse like here images of cities) is in media folder and 
 all statics files (css,js,image which is part of html) is in static folder.
 Templates contain all html pages. User and Weather is app of dailyweather django 
-environment. ccdata.txt conatins names of cities. ER diahram and relational schema
+environment. ccdata.txt conatins names of cities. ER diagram and relational schema
 are ER-diagram and relational schema of Database.
 
 when you complete you database setup and create table ,import weather_city.csv

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>admin</title>
+</head>
+<body>
+<form action="hourly_forecast">
+    {% csrf_token %}
+    <input type="submit" value="hourly_forecast">
+</form>
+ <form action="daily_forecast" >
+    {% csrf_token %}
+    <input type="submit" value="daily_forecast">
+</form>
+<form action="daily_forecast_delete" >
+    {% csrf_token %}
+    <input type="submit" value="all_daily_forecast_delete">
+</form>
+
+{{ what }} done
+</body>
+</html>

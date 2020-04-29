@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>SignUp</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<!-- MATERIAL DESIGN ICONIC FONT -->
+		<link rel="stylesheet" href={% static "user/fonts/material-design-iconic-font/css/material-design-iconic-font.min.css" %}>
+
+		<!-- STYLE CSS -->
+		<link rel="stylesheet" href={% static "user/css/style.css" %}>
+	</head>
+
+	<body>
+
+		<div class="wrapper" style="background-image: url({% static 'user/image/bg.jpg'%});">
+			<div class="inner">
+				<div class="leftside">
+
+				<form action="signUP" method="post">
+                    {% csrf_token %}
+					<h3>Sign Up to <font color=#a65333>Daily</font> Weather</h3>
+                    {% for msg in messages %}
+                     <h4>{{ msg }}</h4> <br>
+                    {% endfor %}
+					<div class="form-wrapper">
+						<label for="">Username</label>
+						<input type="text" class="form-control" name="username" value="{{ data.username }}">
+					</div>
+					<!--<div class="form-wrapper">
+						<label for="">City</label>
+						<input type="text" class="form-control" name="city" value="{{ data.city }}">
+					</div>-->
+                    <div class="form-wrapper">
+						<label for="">City</label>
+						<input type="text" class="form-control" name="city" value="{{ data.city }}" list="city" placeholder="select Your City">
+                        <datalist class="dtl" id="city">
+
+                            {% for cc in data.ccdata %}
+                                <option value="{{ cc }}">
+                            {% endfor %}
+
+                        </datalist>
+					</div>
+
+					<div class="form-wrapper">
+						<label for="">Email</label>
+						<input type="text" class="form-control" name="email" value="{{ data.email }}">
+					</div>
+					<div class="form-wrapper">
+						<label for="">Password</label>
+						<input type="password" class="form-control" name="password">
+					</div>
+					<div class="form-wrapper">
+						<label for="">Confirm Password</label>
+						<input type="password" class="form-control" name="repassword">
+					</div>
+
+					<button>Sign Up</button>
+				</form>
+			</div>
+				<div class="rightside">
+					<div class="rsa"><font color=#a65333>Daily</font> Weather</div><br>
+					<div class="rsb">Weather forecasting is the <br> application of science and technology <br>to predict the conditions <br>of the atmosphere <br> for a given location and time.<br><br>We provide you with<br>perfect and precise data using<br>cutting-edge Technology to <br>forecast the Weather and <br>bring to your fingertips.<br><br> By signing up, You will<br> remain updated with latest <br>weather trends as we will mail<br> you weather updates right <br> into your mailbox.<br><br> </div>
+				</div>
+			</div>
+		</div>
+
+	</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+</html>

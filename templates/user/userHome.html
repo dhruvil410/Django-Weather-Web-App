@@ -1,0 +1,406 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1">
+
+		<title>UserHome</title>
+
+		<!-- Loading third party fonts -->
+		<link href="http://fonts.googleapis.com/css?family=Roboto:300,400,700|" rel="stylesheet" type="text/css">
+		<link href="{% static 'user/fonts/font-awesome.min.css'%}"  >
+		<script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>		<!-- Loading main css file -->
+
+		<!-- Loading main css file -->
+		<link rel="stylesheet" href="{% static 'user/css/styleuh.css'%}">
+
+		<!--[if lt IE 9]>
+		<script src="{% static 'user/js/ie-support/html5.js' %}"></script>
+		<script src="{% static 'user/js/ie-support/respond.js' %}"></script>
+		<![endif]-->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.js"></script>
+
+	</head>
+
+
+	<body onload="startTime()" ng-app="">
+<div class="hero"  data-bg-image="{% static 'user/image/banner.jpg' %}">
+		<div class="site-content">
+			<div class="site-header">
+				<div class="container">
+					<a href="#" class="branding">
+						<img src="{% static 'user/image/logo@2x.png' %}" alt="" class="logo">
+						<div class="logo-type">
+							<h1 class="site-title">Daily Weather</h1>
+							<small class="site-description">Weather on your fingertips</small>
+						</div>
+					</a>
+
+					<!-- Default snippet for navigation -->
+					<div class="main-navigation">
+                        <form action="logOut" id="logout" method="post">
+                        {% csrf_token %}
+
+						<button type="button" class="menu-toggle"><i class="fa fa-bars"></i></button>
+						<ul class="menu">
+							<li class="menu-item current-menu-item"><a href="logOut">Home</a>&nbsp &nbsp</li>
+							<li class="menu-item current-menu-item"><a href="#city_name">{{ userInfo.username }}</a>&nbsp &nbsp</li>
+							<li class="menu-item logout"><a href="#" onclick="document.getElementById('logout').submit();">Log Out</a>&nbsp &nbsp</li>
+						</ul> <!-- .menu -->
+                        </form>
+					</div> <!-- .main-navigation -->
+
+					<div class="mobile-navigation"></div>
+
+				</div>
+			</div> <!-- .site-header -->
+
+			<div class="hero" data-bg-image="{% static 'user/image/banner.jpg' %}">
+				<div class="container">
+					<form action="searchbar" method="post" class="find-location">
+                    {% csrf_token %}
+                        <input type="hidden" name="usrnm" id="usrnm" value={{ userInfo.username }}>
+						<input type="text" name="city_name" id="city_name" list="city" placeholder="Search a location...">
+                        <datalist class="dtl" id="city">
+
+            {% for cc in info.ccdata %}
+                <option value="{{ cc }}">
+            {% endfor %}
+
+                        </datalist>
+						<input type="submit" value="Search">
+					</form>
+                    <br><h3 id="nf">{{ info.msg }}</h3>
+				</div>
+			</div>
+
+
+			<div class="container-tod">
+
+						<!-- City -->
+						<div class="citytod">
+							<div class="titletod">
+								<h2>{{ info.city }}</h2>
+								<h3>{{ info.country }}</h3>
+							</div>
+							<div class="date-timetod">
+								<div class="dmy">
+									<div id="txtdt">14:53:05</div>
+									<div class="date">
+										<!-- Date-JavaScript -->
+										<script type="text/javascript">
+										var mydate=new Date()
+										var year=mydate.getYear()
+										if(year<1000)
+										year+=1900
+										var day=mydate.getDay()
+										var month=mydate.getMonth()
+										var daym=mydate.getDate()
+										if(daym<10)
+										daym="0"+daym
+										var dayarray=new Array("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday")
+										var montharray=new Array("January","February","March","April","May","June","July","August","September","October","November","December")
+										document.write(""+dayarray[day]+" "+montharray[month]+" "+daym+" "+year+"")
+										</script>
+										<!-- //Date-JavaScript -->
+									</div>
+								</div>
+								<div class="temperaturetod">
+									<p>{{ info.temp }}°<span>C</span></p>
+								</div>
+								<div class="clear"></div>
+							</div>
+						</div>
+						<!-- //City -->
+
+
+
+						<!-- Forecast -->
+						<div class="forecasttod">
+							<div class="forecast-icontod">
+								<img src=" {% static info.image %}" style="margin-top: 15px" alt="">
+							</div>
+							<div class="today-weathertod">
+								<h3>{{ info.desc }}</h3>
+								<ul>
+									<li>Temperature <span> {{ info.temp }}°C</span></li>
+									<li>Humidity <span> {{ info.humidity }} g/m3</span></li>
+									<li>Wind Speed <span> {{ info.wind_speed }} Kmph</span></li>
+									<li>Wind Direction <span> {{ info.wind_dir }}° N</span></li>
+									<li>Visibility <span> {{ info.visibility }} Mtrs</span></li>
+									<li>Pressure <span> {{ info.pressure }} Atm</span></li>
+								</ul>
+							</div>
+						</div>
+						<!-- //Forecast -->
+						<div class="clear"></div>
+
+					</div>
+
+
+
+
+<div class="wkfc">Hourly Report
+			</div>
+						<div class="forecast-table">
+							<div class="rightArrow" id="rightArrow1"></div>
+							<div class="container">
+								<div class="forecast-container" id="tslshow1">
+                                    {% for hour in hrfc %}
+									<div class="today forecast">
+										<div class="forecast-header">
+											<div class="day">Today</div>
+											<div class="date">{{ hour.hour }}:00 </div>
+										</div> <!-- .forecast-header -->
+										<div class="forecast-content">
+											<div class="location">{{ info.city }}</div>
+											<div class="degree">
+												<div class="num">{{ hour.temperature }}<sup>o</sup>C</div>
+												<div class="forecast-icon">
+													<img src="{% static hour.icon %}" alt="" width=90>
+									            </div>
+                                                <br><br>
+                                                <span style="font-size: 21px"><img style="vertical-align: middle" src="{% static 'user/image/icon-umberella@2x.png' %}" alt=""> {{ hour.humidity }}.0</span>
+								                <span style="font-size: 21px"><img style="vertical-align: middle" src="{% static 'user/image/icon-wind@2x.png' %}" alt=""> {{ hour.wind_speed }} km/h</span>
+								                <span style="font-size: 21px"><img style="vertical-align: middle" src="{% static 'user/image/icon-compass@2x.png' %}" alt=""> {{ hour.wind_dir }}<sup>o</sup> N</span>
+
+								            </div>
+								            </div>
+                                    </div>
+                                    {% endfor %}
+
+								</div>
+
+							</div>
+							<div class="leftArrow" id="leftArrow1" style="top: 1109px"></div>
+						</div>
+
+
+
+
+
+<div class="wkfc">Weekly Forecast
+</div>
+			<div class="forecast-table">
+				<div class="rightArrow" id="rightArrow2" ></div>
+				<div class="container">
+					<div class="forecast-container" id="tslshow2">
+
+                        {% for day,date,fd in forecastData %}
+
+                            <div class="today forecast">
+                            <div class="forecast-header">
+								<div class="day">{{ day }}</div>
+								<div class="date">{{ date }}</div>
+							</div> <!-- .forecast-header -->
+							<div class="forecast-content">
+								<div class="location">{{ info.city }}</div>
+								<div class="degree">
+									<div class="num">{{ fd.max_temperature }}<sup>o</sup>C</div>
+									<div class="forecast-icon">
+										<img src="{% static 'user/image/icons/icon-1.svg' %}" alt="" width=90>
+									</div>
+                                    <div class="num2">{{ fd.min_temperature }}<sup>o</sup>C</div>
+                                    <span><img src="{% static 'user/image/icon-umberella.png' %}" alt="">&nbsp{{ fd.avg_humidity }}</span>
+								<span>&nbsp {{ fd.sunrise_time }} <img src="{% static 'user/image/sun.png' %}" alt=""> {{ fd.sunset_time }}</span>
+								</div>
+
+							</div>
+						    </div>
+
+                        {% endfor %}
+					</div>
+				</div>
+				<div class="leftArrow" id="leftArrow2" style="top: 1704px"></div>
+			</div>
+
+			<script type="text/javascript">
+				var view2 = $("#tslshow2");
+			var move2 = "481px";
+			var sliderLimit2 = -2886
+
+			$("#rightArrow2").click(function() {
+
+				var currentPosition2 = parseInt(view2.css("left"));
+				if (currentPosition2 >= sliderLimit2) view2.stop(false, true).animate({
+					left: "-=" + move2
+				}, {
+					duration: 400
+				})
+
+			});
+
+			$("#leftArrow2").click(function() {
+
+				var currentPosition2 = parseInt(view2.css("left"));
+				if (currentPosition2 < 0) view2.stop(false, true).animate({
+					left: "+=" + move2
+				}, {
+					duration: 400
+				})
+
+			});
+
+			</script>
+
+
+
+<div class="wkfc">Historical Weather
+</div>
+			<div class="forecast-table">
+				<div class="rightArrow" id="rightArrow3" ></div>
+				<div class="container">
+					<div class="forecast-container" id="tslshow3">
+
+                        {% for day,date,fd in historicData %}
+
+                            <div class="today forecast">
+                            <div class="forecast-header">
+								<div class="day">{{ day }}</div>
+								<div class="date">{{ date }}</div>
+							</div> <!-- .forecast-header -->
+							<div class="forecast-content">
+								<div class="location">{{ info.city }}</div>
+								<div class="degree">
+									<div class="num">{{ fd.max_temperature }}<sup>o</sup>C</div>
+									<div class="forecast-icon">
+										<img src="{% static 'user/image/icons/icon-1.svg' %}" alt="" width=90>
+									</div>
+                                    <div class="num2">{{ fd.min_temperature }}<sup>o</sup>C</div>
+                                    <span><img src="{% static 'user/image/icon-umberella.png' %}" alt="">&nbsp{{ fd.avg_humidity }}</span>
+								<span>&nbsp {{ fd.sunrise_time }} <img src="{% static 'user/image/sun.png' %}" alt=""> {{ fd.sunset_time }}</span>
+								</div>
+
+							</div>
+						    </div>
+
+                        {% endfor %}
+					</div>
+				</div>
+				<div class="leftArrow" id="leftArrow3" style="top: 2304px"></div>
+			</div>
+
+			<script type="text/javascript">
+				var view3 = $("#tslshow3");
+			var move3 = "481px";
+			var sliderLimit3 = -2886
+
+			$("#rightArrow3").click(function() {
+
+				var currentPosition3 = parseInt(view3.css("left"));
+				if (currentPosition3 >= sliderLimit2) view3.stop(false, true).animate({
+					left: "-=" + move3
+				}, {
+					duration: 400
+				})
+
+			});
+
+			$("#leftArrow3").click(function() {
+
+				var currentPosition3 = parseInt(view3.css("left"));
+				if (currentPosition3 < 0) view3.stop(false, true).animate({
+					left: "+=" + move3
+				}, {
+					duration: 400
+				})
+
+			});
+
+			</script>
+
+
+
+
+
+			<footer class="site-footer">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-8">
+							<form action="#" class="subscribe-form">
+								<input type="text" placeholder="Enter your Feedback here...">
+								<input type="submit" value="Send Feedback">
+							</form>
+						</div>
+						<div class="col-md-3 col-md-offset-1">
+							<div class="social-links">
+								<a href="#"><i class="fa fa-facebook"></i></a>
+								<a href="#"><i class="fa fa-twitter"></i></a>
+								<a href="#"><i class="fa fa-google-plus"></i></a>
+								<a href="#"><i class="fa fa-pinterest"></i></a>
+							</div>
+						</div>
+					</div>
+
+					<p class="colophon">Copyright 2020 Daily Weather. All rights reserved</p>
+				</div>
+			</footer> <!-- .site-footer -->
+		</div>
+        <script>
+            app.run(['$location', function ($location) {
+                    $location.path('/');
+            }]);
+        </script>
+		<script src="{% static 'user/js/jquery-1.11.1.min.js' %}"></script>
+		<script src="{% static 'user/js/plugins.js' %}"></script>
+		<script src="{% static 'user/js/app.js' %}"></script>
+</div>
+	</body>
+	<script>
+		function startTime() {
+			var today = new Date();
+			var h = today.getHours();
+			var m = today.getMinutes();
+			var s = today.getSeconds();
+			m = checkTime(m);
+			s = checkTime(s);
+			document.getElementById('txtdt').innerHTML =
+			h + ":" + m + ":" + s;
+			var t = setTimeout(startTime, 500);
+			}
+			function checkTime(i) {
+			if (i < 10) {i = "0" + i}; // add zero in front of numbers < 10
+			return i;
+		}
+	</script>
+
+
+
+
+
+	<script type="text/javascript">
+		var view1 = $("#tslshow1");
+	var move1 = "481px";
+	var sliderLimit1 = -2886
+
+	$("#rightArrow1").click(function() {
+
+		var currentPosition1 = parseInt(view1.css("left"));
+		if (currentPosition1 >= sliderLimit1) view1.stop(false, true).animate({
+			left: "-=" + move1
+		}, {
+			duration: 350
+		})
+
+	});
+
+	$("#leftArrow1").click(function() {
+
+		var currentPosition1 = parseInt(view1.css("left"));
+		if (currentPosition1 < 0) view1.stop(false, true).animate({
+			left: "+=" + move1
+		}, {
+			duration: 350
+		})
+
+	});
+
+	</script>
+
+
+
+
+</html>

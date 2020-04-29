@@ -1,7 +1,7 @@
-#Weather Web App
+# Weather Web App
 Forecast and weather website with DBMS
 
-#Web Framework
+# Web Framework
 **Python - Django**
 
 # Inside The Project

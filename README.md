@@ -8,7 +8,7 @@ Forecast and weather website with DBMS
 Here ,I provide link of the video. In video, you will see view of the site and
 brief explanation  about project and database. 
 
-[Youtube Video]()
+[Youtube Video](https://youtu.be/DiaSj8LzTtg)
 
 In this repository, dailyweather is django environment. All media files(images 
 which is part of databse like here images of cities) is in media folder and 
